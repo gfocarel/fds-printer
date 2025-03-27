@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/fds-printer/static/css/main.233b3b67.css",
-    "main.js": "/fds-printer/static/js/main.8d12bba5.js",
+    "main.css": "/fds-printer/static/css/main.ee5b391d.css",
+    "main.js": "/fds-printer/static/js/main.0a876e00.js",
     "index.html": "/fds-printer/index.html",
-    "main.233b3b67.css.map": "/fds-printer/static/css/main.233b3b67.css.map",
-    "main.8d12bba5.js.map": "/fds-printer/static/js/main.8d12bba5.js.map"
+    "main.ee5b391d.css.map": "/fds-printer/static/css/main.ee5b391d.css.map",
+    "main.0a876e00.js.map": "/fds-printer/static/js/main.0a876e00.js.map"
   },
   "entrypoints": [
-    "static/css/main.233b3b67.css",
-    "static/js/main.8d12bba5.js"
+    "static/css/main.ee5b391d.css",
+    "static/js/main.0a876e00.js"
   ]
 }
