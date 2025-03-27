@@ -1,6 +1,6 @@
 #!/bin/bash
 # Build the Docker image
-docker build -t .
+docker build -t web-voice-app .
 
 # Stop any existing container
 docker-compose down
