@@ -1,1 +1,15 @@
-/* All CSS has been removed as per the request */
+.led-indicator {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+
+.led-red {
+  background-color: #ff0000;
+}
+
+.led-green {
+  background-color: #00ff00;
+}

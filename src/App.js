@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import './App.css';
 
 const PRINTER_SERVICE_UUID = '000018f0-0000-1000-8000-00805f9b34fb';
 const PRINTER_CHARACTERISTIC_UUID = '00002af1-0000-1000-8000-00805f9b34fb';
@@ -18,6 +19,8 @@ function App() {
   const recognitionRef = useRef(null);
   const currentQuestionRef = useRef(null);
   const audioContextRef = useRef(null);
+  const [printerStatus, setPrinterStatus] = useState('Non connesso');
+  const [connectedDevice, setConnectedDevice] = useState(null);
 
   const questions = {
     ARRIVO: 'Luogo di prelievo?',
@@ -209,6 +212,11 @@ function App() {
 
   const handlePrint = async () => {
     try {
+      if (!connectedDevice) {
+        throw new Error('Stampante non connessa');
+      }
+  
+      const server = await connectedDevice.gatt.connect();
       // Request the GOOJPRT printer
       const device = await navigator.bluetooth.requestDevice({
         filters: [
@@ -218,7 +226,7 @@ function App() {
       });
 
       console.log('Connecting to printer...');
-      const server = await device.gatt.connect();
+      server = await device.gatt.connect();
 
       // Get the printer service
       const service = await server.getPrimaryService(PRINTER_SERVICE_UUID);
@@ -276,6 +284,31 @@ function App() {
     }
   };
 
+  const connectPrinter = async () => {
+    try {
+      const device = await navigator.bluetooth.requestDevice({
+        filters: [
+          { namePrefix: 'GOOJPRT' }
+        ],
+        optionalServices: [PRINTER_SERVICE_UUID]
+      });
+
+      setPrinterStatus('Connessione in corso...');
+      const server = await device.gatt.connect();
+      setConnectedDevice(device);
+      setPrinterStatus('Stampante connessa');
+
+      device.addEventListener('gattserverdisconnected', () => {
+        setPrinterStatus('Non connesso');
+        setConnectedDevice(null);
+      });
+
+    } catch (error) {
+      console.error('Errore connessione:', error);
+      setPrinterStatus(`Errore: ${error.message}`);
+    }
+  };
+
   const handleReload = () => {
     setFormData({
       ARRIVO: '',
@@ -293,6 +326,14 @@ function App() {
 
   return (
     <div className="container" >
+      <button onClick={connectPrinter} className="button" style={{ fontSize: '10px' }}>
+        CONNECT PRINTER
+      </button>&nbsp;
+      <span 
+        className={`led-indicator ${connectedDevice ? 'led-green' : 'led-red'}`} 
+        title={printerStatus}
+      ></span>
+      <br></br>
       <button onClick={isListening ? () => recognitionRef.current?.stop() : startListening} className="button" style={{ fontSize: '10px' }}>
         {isListening ? 'Stop' : 'INSERT'}
       </button>&nbsp;
@@ -302,10 +343,9 @@ function App() {
       <button onClick={handleReload} className="button" style={{ fontSize: '10px' }}>
         RELOAD
       </button>
-      <div className="status-container">
-        {error ? <p className="error">{}</p> : <p className="text">{currentQuestion ? questions[currentQuestion] : ''}</p>}
-      </div>
+      <br></br>
       <div className="form-data" style={{ fontSize: '10px' }}>
+        --------------------------------<br></br>
         NCC FOCARELLI GIAMPAOLO<br></br>
         VIA DANIMARCA,8-POMEZIA(RM)<br></br>
         VIA TUNISI, 52 - ROMA<br></br>
