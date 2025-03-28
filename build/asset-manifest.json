@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/fds-printer/static/css/main.ee5b391d.css",
+    "main.js": "/fds-printer/static/js/main.0a876e00.js",
+    "index.html": "/fds-printer/index.html",
+    "main.ee5b391d.css.map": "/fds-printer/static/css/main.ee5b391d.css.map",
+    "main.0a876e00.js.map": "/fds-printer/static/js/main.0a876e00.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ee5b391d.css",
+    "static/js/main.0a876e00.js"
+  ]
+}
