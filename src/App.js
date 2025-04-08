@@ -220,7 +220,7 @@ function App() {
       // Request the GOOJPRT printer
       const device = await navigator.bluetooth.requestDevice({
         filters: [
-          { namePrefix: 'GOOJPRT' }
+          { namePrefix: 'MTP-II' } // Usa il prefisso corretto per il nome della stampante
         ],
         optionalServices: [PRINTER_SERVICE_UUID]
       });
@@ -231,6 +231,9 @@ function App() {
       // Get the printer service
       const service = await server.getPrimaryService(PRINTER_SERVICE_UUID);
       const characteristic = await service.getCharacteristic(PRINTER_CHARACTERISTIC_UUID);
+
+      const services = await server.getPrimaryServices();
+      console.log('Servizi disponibili:', services.map(service => service.uuid));
 
       // Format the print data
       const printData = [
@@ -304,8 +307,15 @@ function App() {
       });
 
     } catch (error) {
-      console.error('Errore connessione:', error);
+      console.error('Errore durante la connessione:', error);
       setPrinterStatus(`Errore: ${error.message}`);
+      if (error.name === 'NotFoundError') {
+        alert('Stampante non trovata. Assicurati che sia accesa e visibile.');
+      } else if (error.name === 'SecurityError') {
+        alert('Il browser non supporta l\'API Web Bluetooth o l\'accesso è stato negato.');
+      } else {
+        alert('Errore sconosciuto: ' + error.message);
+      }
     }
   };
 
